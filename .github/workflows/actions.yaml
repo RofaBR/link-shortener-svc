@@ -34,6 +34,7 @@ jobs:
       - name: Run Build
         run: |
           . $(werf ci-env github --as-file)
-          SHORT_SHA=${GITHUB_SHA::7}
+          SHORT_SHA=v${GITHUB_SHA::7}
           REPO_NAME=${GITHUB_REPOSITORY//\//-}
           werf export service --tag ghcr.io/$REPO_NAME:$SHORT_SHA
+
