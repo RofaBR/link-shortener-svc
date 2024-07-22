@@ -31,10 +31,10 @@ jobs:
           docker version
           echo $GITHUB_REPOSITORY
           echo $GITHUB_SHA
+
       - name: Run Build
         run: |
           . $(werf ci-env github --as-file)
-          SHORT_SHA=v${GITHUB_SHA::7}
-          REPO_NAME=${GITHUB_REPOSITORY//\//-}
+          SHORT_SHA=${GITHUB_SHA::7}
+          REPO_NAME="rofabr/link-shortener-svc"
           werf export service --tag ghcr.io/$REPO_NAME:$SHORT_SHA
-
