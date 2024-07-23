@@ -1,6 +1,6 @@
 module github.com/RofaBR/link-shortener-svc
 
-go 1.22.5
+go 1.22
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible // indirect
