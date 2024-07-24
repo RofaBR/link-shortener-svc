@@ -1,11 +1,16 @@
 module github.com/RofaBR/link-shortener-svc
 
-go 1.20
+// go 1.20
+go 1.21
+
+toolchain go1.22.5
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/go-chi/chi v4.1.2+incompatible
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/rubenv/sql-migrate v1.7.0
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	gitlab.com/distributed_lab/ape v1.7.1
 	gitlab.com/distributed_lab/kit v1.11.3
 	gitlab.com/distributed_lab/logan v3.8.1+incompatible
@@ -33,7 +38,6 @@ require (
 	github.com/google/jsonapi v1.0.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/lib/pq v1.10.9 // indirect

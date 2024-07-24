@@ -5,14 +5,15 @@ import (
 	"net/http"
 
 	"github.com/RofaBR/link-shortener-svc/internal/config"
-	/*
-		"github.com/RofaBR/link-shortener-svc/internal/service/requests"
-		"github.com/RofaBR/link-shortener-svc/internal/config"
-		"gitlab.com/distributed_lab/ape"
-		"gitlab.com/distributed_lab/logan/v3/errors"
-		"github.com/jmoiron/sqlx"
-		"github.com/teris-io/shortid"
-	*/)
+	"github.com/RofaBR/link-shortener-svc/internal/service/requests"
+	"github.com/go-chi/chi"
+	"gitlab.com/distributed_lab/ape"
+	"gitlab.com/distributed_lab/ape/problems"
+	"gitlab.com/distributed_lab/kit/kv"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/teris-io/shortid"
+)
 
 type Link struct {
 	ID          int    `db:"id"`
@@ -34,7 +35,7 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := cfg.DB().RawDB()
+	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres") // створюємо sqlx.DB з sql.DB
 
 	shortURL, err := shortid.Generate()
 	if err != nil {
@@ -60,7 +61,7 @@ func GetLink(w http.ResponseWriter, r *http.Request) {
 	shortURL := chi.URLParam(r, "shortURL")
 
 	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := cfg.DB().RawDB()
+	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres") // створюємо sqlx.DB з sql.DB
 
 	var link Link
 	err := db.Get(&link, `SELECT * FROM links WHERE short_url=$1`, shortURL)
