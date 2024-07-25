@@ -6,21 +6,15 @@ import (
 
 	"github.com/RofaBR/link-shortener-svc/internal/config"
 	"github.com/RofaBR/link-shortener-svc/internal/service/requests"
+	"github.com/RofaBR/link-shortener-svc/internal/storage"
 	"github.com/go-chi/chi"
+	"github.com/jmoiron/sqlx"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
 	"gitlab.com/distributed_lab/kit/kv"
 
-	"github.com/jmoiron/sqlx"
 	"github.com/teris-io/shortid"
 )
-
-type Link struct {
-	ID          int    `db:"id"`
-	OriginalURL string `db:"original_url"`
-	ShortURL    string `db:"short_url"`
-	CreatedAt   string `db:"created_at"`
-}
 
 func CreateLink(w http.ResponseWriter, r *http.Request) {
 	var request requests.CreateLinkRequest
@@ -35,7 +29,8 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres") // створюємо sqlx.DB з sql.DB
+	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres")
+	store := storage.New(db)
 
 	shortURL, err := shortid.Generate()
 	if err != nil {
@@ -43,12 +38,12 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link := Link{
+	link := &storage.Link{
 		OriginalURL: request.OriginalURL,
 		ShortURL:    shortURL,
 	}
 
-	_, err = db.NamedExec(`INSERT INTO links (original_url, short_url) VALUES (:original_url, :short_url)`, &link)
+	err = store.CreateLink(link)
 	if err != nil {
 		ape.RenderErr(w, problems.InternalError())
 		return
@@ -61,10 +56,10 @@ func GetLink(w http.ResponseWriter, r *http.Request) {
 	shortURL := chi.URLParam(r, "shortURL")
 
 	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres") // створюємо sqlx.DB з sql.DB
+	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres")
+	store := storage.New(db)
 
-	var link Link
-	err := db.Get(&link, `SELECT * FROM links WHERE short_url=$1`, shortURL)
+	link, err := store.GetLinkByShortURL(shortURL)
 	if err != nil {
 		ape.RenderErr(w, problems.NotFound())
 		return
