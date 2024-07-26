@@ -3,7 +3,7 @@ log:
   disable_sentry: true
 
 db:
-  url: db_url
+  url: postgres://RofaBR:bo57v97dm@localhost:5432/link_shortener?sslmode=disable
 
 listener:
   addr: :8000

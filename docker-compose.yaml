@@ -4,9 +4,9 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/link_shortener?sslmode=disable
+      - DATABASE_URL=postgres://RofaBR:bo57v97dm@db:5432/link_shortener?sslmode=disable
     depends_on:
       - db
       - nginx
@@ -14,8 +14,8 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+      POSTGRES_USER: RofaBR
+      POSTGRES_PASSWORD: bo57v97dm
       POSTGRES_DB: link_shortener
     volumes:
       - db_data:/var/lib/postgresql/data
