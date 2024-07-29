@@ -1,6 +1,7 @@
 log:
   level: debug
   disable_sentry: true
+  path: /var/log/link-shortener/log.txt
 
 db:
   url: postgres://RofaBR:bo57v97dm@db:5432/link_shortener?sslmode=disable

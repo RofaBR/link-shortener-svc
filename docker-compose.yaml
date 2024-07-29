@@ -3,15 +3,13 @@ version: '3.9'
 services:
   app:
     build: .
+    command: /usr/local/bin/link-shortener-svc run service
     ports:
       - "8080:8000"
-    environment:
-      - CONFIG_PATH=/config.yaml
     volumes:
       - ./config.yaml:/config.yaml
-    depends_on:
-      - db
-      - nginx
+    environment:
+      - KV_VIPER_FILE=/config.yaml
 
   db:
     image: postgres:13

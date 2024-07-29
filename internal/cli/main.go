@@ -4,6 +4,7 @@ import (
 	"github.com/RofaBR/link-shortener-svc/internal/config"
 	"github.com/RofaBR/link-shortener-svc/internal/service"
 	"github.com/alecthomas/kingpin"
+
 	"gitlab.com/distributed_lab/kit/kv"
 	"gitlab.com/distributed_lab/logan/v3"
 )

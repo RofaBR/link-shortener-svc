@@ -8,4 +8,5 @@ CREATE TABLE links (
 );
 
 -- +migrate Down
+
 DROP TABLE links;
