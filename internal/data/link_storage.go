@@ -3,6 +3,8 @@ package data
 import (
 	"database/sql"
 	"errors"
+
+	"github.com/teris-io/shortid"
 )
 
 type LinkStorage interface {
@@ -19,15 +21,17 @@ func NewPostgresLinkStorage(db *sql.DB) *PostgresLinkStorage {
 }
 
 func (s *PostgresLinkStorage) CreateLink(url string) (string, error) {
-	/*shortURL :=
+	shortURL, err := shortid.Generate()
+	if err != nil {
+		return "", err
+	}
 
-	_, err := s.db.Exec("INSERT INTO links (short_url, original_url) VALUES ($1, $2)", shortURL, url)
+	_, err = s.db.Exec("INSERT INTO links (original_url, short_url) VALUES ($1, $2)", url, shortURL)
 	if err != nil {
 		return "", err
 	}
 
 	return shortURL, nil
-	*/
 }
 
 func (s *PostgresLinkStorage) GetLink(shortURL string) (string, error) {
