@@ -12,5 +12,4 @@ FROM alpine:3.9
 COPY --from=buildbase /usr/local/bin/link-shortener-svc /usr/local/bin/link-shortener-svc
 RUN apk add --no-cache ca-certificates
 
-
 CMD ["/usr/local/bin/link-shortener-svc"]
