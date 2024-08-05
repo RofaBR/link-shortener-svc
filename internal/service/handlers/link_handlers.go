@@ -4,16 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/RofaBR/link-shortener-svc/internal/config"
 	"github.com/RofaBR/link-shortener-svc/internal/service/requests"
-	"github.com/RofaBR/link-shortener-svc/internal/storage"
 	"github.com/go-chi/chi"
-	"github.com/jmoiron/sqlx"
 	"gitlab.com/distributed_lab/ape"
 	"gitlab.com/distributed_lab/ape/problems"
-	"gitlab.com/distributed_lab/kit/kv"
-
-	"github.com/teris-io/shortid"
 )
 
 func CreateLink(w http.ResponseWriter, r *http.Request) {
@@ -28,42 +22,26 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres")
-	store := storage.New(db)
+	storage := LinkStorageFromContext(r.Context())
 
-	shortURL, err := shortid.Generate()
+	shortURL, err := storage.CreateLink(request.OriginalURL)
 	if err != nil {
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
 
-	link := &storage.Link{
-		OriginalURL: request.OriginalURL,
-		ShortURL:    shortURL,
-	}
-
-	err = store.CreateLink(link)
-	if err != nil {
-		ape.RenderErr(w, problems.InternalError())
-		return
-	}
-
-	ape.Render(w, link)
+	ape.Render(w, map[string]string{"short_url": shortURL})
 }
 
 func GetLink(w http.ResponseWriter, r *http.Request) {
 	shortURL := chi.URLParam(r, "shortURL")
+	storage := LinkStorageFromContext(r.Context())
 
-	cfg := config.New(r.Context().Value("config").(kv.Getter))
-	db := sqlx.NewDb(cfg.DB().RawDB(), "postgres")
-	store := storage.New(db)
-
-	link, err := store.GetLinkByShortURL(shortURL)
+	originalURL, err := storage.GetLink(shortURL)
 	if err != nil {
 		ape.RenderErr(w, problems.NotFound())
 		return
 	}
 
-	http.Redirect(w, r, link.OriginalURL, http.StatusFound)
+	http.Redirect(w, r, originalURL, http.StatusFound)
 }
