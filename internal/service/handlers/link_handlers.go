@@ -11,6 +11,8 @@ import (
 )
 
 func CreateLink(w http.ResponseWriter, r *http.Request) {
+	storage := LinkStorageFromContext(r.Context())
+
 	var request requests.CreateLinkRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		ape.RenderErr(w, problems.BadRequest(err)...)
@@ -22,8 +24,6 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	storage := LinkStorageFromContext(r.Context())
-
 	shortURL, err := storage.CreateLink(request.OriginalURL)
 	if err != nil {
 		ape.RenderErr(w, problems.InternalError())
@@ -34,8 +34,9 @@ func CreateLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLink(w http.ResponseWriter, r *http.Request) {
-	shortURL := chi.URLParam(r, "shortURL")
 	storage := LinkStorageFromContext(r.Context())
+
+	shortURL := chi.URLParam(r, "shortURL")
 
 	originalURL, err := storage.GetLink(shortURL)
 	if err != nil {
