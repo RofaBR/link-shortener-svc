@@ -16,6 +16,7 @@ type service struct {
 	copus    types.Copus
 	listener net.Listener
 	storage  data.LinkStorage
+	config   config.Config
 }
 
 func (s *service) run() error {
@@ -38,6 +39,7 @@ func newService(cfg config.Config) *service {
 		copus:    cfg.Copus(),
 		listener: cfg.Listener(),
 		storage:  storage,
+		config:   cfg,
 	}
 }
 

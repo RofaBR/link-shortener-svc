@@ -17,6 +17,7 @@ func (s *service) router(storage data.LinkStorage) chi.Router {
 		ape.LoganMiddleware(s.log),
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
+			handlers.CtxConfig(s.config),
 			func(ctx context.Context) context.Context {
 				return handlers.CtxWithLinkStorage(ctx, storage)
 			},
