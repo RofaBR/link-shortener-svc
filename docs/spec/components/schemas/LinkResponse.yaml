@@ -1,0 +1,13 @@
+type: object
+properties:
+  short_url:
+    type: string
+    description: "shortened URL"
+    example: "http://short.url/abc123"
+  created_at:
+    type: string
+    format: date-time
+    description: "Creation date and time"
+required:
+  - short_url
+  - created_at

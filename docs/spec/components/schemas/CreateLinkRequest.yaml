@@ -1,0 +1,8 @@
+type: object
+properties:
+  original_url:
+    type: string
+    description: "The original URL to shorten"
+    example: "http://example.com"
+required:
+  - original_url

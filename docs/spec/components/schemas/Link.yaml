@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    example: "1"
+  original_url:
+    type: string
+    description: "The original URL"
+  short_url:
+    type: string
+    description: "The shortened URL"
+  created_at:
+    type: string
+    format: date-time
+    description: "The timestamp of when the link was created"
