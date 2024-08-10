@@ -1,0 +1,22 @@
+post:
+  tags:
+    - Links
+  summary: Create a new short link
+  description: Creates a new short URL link based on the provided long URL.
+  operationId: createLink
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateLinkRequest'
+  responses:
+    '201':
+      description: Link created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkResponse'
+    '400':
+      description: Invalid request
+    '500':
+      description: Internal server error

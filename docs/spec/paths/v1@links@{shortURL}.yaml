@@ -1,0 +1,23 @@
+get:
+  tags:
+    - Links
+  summary: Retrieve link information
+  description: Get detailed information about a short URL.
+  operationId: getLink
+  parameters:
+    - name: shortURL
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Link found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LinkResponse'
+    '404':
+      description: Link not found
+    '500':
+      description: Internal server error
